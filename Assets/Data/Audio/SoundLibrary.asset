@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f3648712a59cce4691946a15f5e0269, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Audio.SoundLibrary
+  menuMusic: {fileID: 0}
+  levelMusic: {fileID: 0}
+  enemyDefeated: {fileID: 0}
+  itemCollected: {fileID: 0}
+  abilityActivated: {fileID: 0}
+  playerDied: {fileID: 0}
+  levelComplete: {fileID: 0}
+  gameOver: {fileID: 0}
+  uiClick: {fileID: 0}
+  uiBack: {fileID: 0}
+  uiLocked: {fileID: 0}
