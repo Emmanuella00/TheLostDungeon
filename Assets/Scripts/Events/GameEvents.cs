@@ -30,6 +30,9 @@ namespace TheLostDungeon.Events
         public static event Action<int, int> PlayerHealthChanged;           // (current, max)
         public static event Action PlayerDied;
         public static event Action<string, float> AbilityActivated;         // (abilityId, cooldown)
+        public static event Action<string> WeaponFired;                     // weaponId
+        public static event Action<float, bool> WeaponHeatChanged;          // (heat 0..1, overheated)
+        public static event Action<DamageDealtInfo> DamageDealt;            // player's hit landed
 
         // ----- World -----
         public static event Action<EnemyDefeatedInfo> EnemyDefeated;
@@ -49,6 +52,9 @@ namespace TheLostDungeon.Events
         public static void RaisePlayerHealthChanged(int current, int max) => PlayerHealthChanged?.Invoke(current, max);
         public static void RaisePlayerDied() => PlayerDied?.Invoke();
         public static void RaiseAbilityActivated(string abilityId, float cooldown) => AbilityActivated?.Invoke(abilityId, cooldown);
+        public static void RaiseWeaponFired(string weaponId) => WeaponFired?.Invoke(weaponId);
+        public static void RaiseWeaponHeatChanged(float heat, bool overheated) => WeaponHeatChanged?.Invoke(heat, overheated);
+        public static void RaiseDamageDealt(DamageDealtInfo info) => DamageDealt?.Invoke(info);
 
         public static void RaiseEnemyDefeated(EnemyDefeatedInfo info) => EnemyDefeated?.Invoke(info);
         public static void RaiseItemCollected(ItemCollectedInfo info) => ItemCollected?.Invoke(info);
@@ -72,6 +78,9 @@ namespace TheLostDungeon.Events
             PlayerHealthChanged = null;
             PlayerDied = null;
             AbilityActivated = null;
+            WeaponFired = null;
+            WeaponHeatChanged = null;
+            DamageDealt = null;
             EnemyDefeated = null;
             ItemCollected = null;
             ObjectiveUpdated = null;

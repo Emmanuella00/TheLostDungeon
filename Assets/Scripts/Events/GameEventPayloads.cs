@@ -31,6 +31,23 @@ namespace TheLostDungeon.Events
         }
     }
 
+    /// <summary>Sent when the player's attack lands, used for crosshair hit markers.</summary>
+    public readonly struct DamageDealtInfo
+    {
+        public readonly float Amount;
+        public readonly bool Blocked;
+        public readonly bool Killed;
+        public readonly Vector3 Point;
+
+        public DamageDealtInfo(float amount, bool blocked, bool killed, Vector3 point)
+        {
+            Amount = amount;
+            Blocked = blocked;
+            Killed = killed;
+            Point = point;
+        }
+    }
+
     public readonly struct LevelResult
     {
         public readonly int LevelIndex;
