@@ -1,7 +1,9 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using TheLostDungeon.Combat;
 using TheLostDungeon.Core;
 using TheLostDungeon.Events;
 using TheLostDungeon.Levels;
+using TheLostDungeon.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +23,30 @@ namespace TheLostDungeon.Debugging
     {
         private bool visible = true;
         private Vector2 scroll;
+        private int playerHealth = -1;
+        private int playerMaxHealth = -1;
+        private float weaponHeat;
+        private bool weaponOverheated;
+        private string lastHit = "-";
+
+        private void OnEnable()
+        {
+            GameEvents.PlayerHealthChanged += HandleHealth;
+            GameEvents.WeaponHeatChanged += HandleHeat;
+            GameEvents.DamageDealt += HandleDamageDealt;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.PlayerHealthChanged -= HandleHealth;
+            GameEvents.WeaponHeatChanged -= HandleHeat;
+            GameEvents.DamageDealt -= HandleDamageDealt;
+        }
+
+        private void HandleHealth(int current, int max) { playerHealth = current; playerMaxHealth = max; }
+        private void HandleHeat(float heat, bool overheated) { weaponHeat = heat; weaponOverheated = overheated; }
+        private void HandleDamageDealt(DamageDealtInfo info) =>
+            lastHit = $"{info.Amount:0} dmg{(info.Blocked ? " (BLOCKED by shield)" : "")}{(info.Killed ? " - KILL" : "")}";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Create()
@@ -35,7 +61,8 @@ namespace TheLostDungeon.Debugging
             if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame)
             {
                 visible = !visible;
-                SetPlayerControl(!visible);
+                bool playing = !GameManager.HasInstance || GameManager.Instance.IsPlaying;
+                SetPlayerControl(!visible && playing);
             }
 
             // A newly loaded level's PlayerController locks the cursor on Start; undo that
@@ -95,6 +122,22 @@ namespace TheLostDungeon.Debugging
             }
 
             GUILayout.Space(8);
+            if (IsInLevel(levels))
+            {
+                GUILayout.Label("<b>Combat</b>", Rich());
+                GUILayout.Label(playerHealth >= 0 ? $"Player health: {playerHealth}/{playerMaxHealth}" : "Player health: (no Player in scene)");
+                GUILayout.Label($"Blaster heat: {weaponHeat * 100f:0}%{(weaponOverheated ? "  OVERHEATED" : "")}");
+                GUILayout.Label($"Last hit: {lastHit}");
+                Health playerHp = FindPlayerHealth();
+                GUI.enabled = playerHp != null && playerHp.IsAlive && game.IsPlaying;
+                if (GUILayout.Button("Damage player 25"))
+                    playerHp.TakeDamage(new DamageInfo(25f, DamageType.Melee, playerHp.transform.position, playerHp.transform.forward));
+                if (GUILayout.Button("Heal player 50")) playerHp.Heal(50f);
+                GUI.enabled = true;
+                GUILayout.Label("Hide panel (F1), then: Left click = shoot, Right click / F = melee", Small());
+                GUILayout.Space(8);
+            }
+
             GUILayout.Label("<b>Simulate gameplay events</b>", Rich());
             bool inLevel = levels.CurrentLevel != null;
             GUI.enabled = inLevel && game.IsPlaying;
@@ -119,6 +162,14 @@ namespace TheLostDungeon.Debugging
 
             GUILayout.EndScrollView();
             GUILayout.EndArea();
+        }
+
+        private static bool IsInLevel(LevelManager levels) => levels.CurrentLevel != null;
+
+        private static Health FindPlayerHealth()
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            return player != null ? player.GetComponent<Health>() : null;
         }
 
         private static void SetPlayerControl(bool enabled)
