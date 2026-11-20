@@ -2,7 +2,8 @@
     "name": "TheLostDungeon.Editor",
     "rootNamespace": "TheLostDungeon.EditorTools",
     "references": [
-        "TheLostDungeon"
+        "TheLostDungeon",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [
         "Editor"
