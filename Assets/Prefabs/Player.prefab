@@ -664,7 +664,7 @@ MonoBehaviour:
   muzzle: {fileID: 1724217310073423786}
   projectilePrefab: {fileID: 4800947522030479553, guid: 4fcb4878fdb4ef54a9b92191a94a5ae5, type: 3}
   impactEffectPrefab: {fileID: 8147886722101648199, guid: f0d503769871a00479a44fa545280499, type: 3}
-  muzzleFlashPrefab: {fileID: 7680823622321741579, guid: 0bb1a19f1c2d27546890031d5d798d24, type: 3}
+  muzzleFlashPrefab: {fileID: 1247660151893842277, guid: f7be4a70d7e79474e919067d8398741d, type: 3}
   damage: 20
   projectileSpeed: 45
   range: 80

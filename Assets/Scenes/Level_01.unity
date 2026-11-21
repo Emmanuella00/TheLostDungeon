@@ -2525,10 +2525,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6293473095528528271, guid: d2249475f47540240a2cb14244d742c8, type: 3}
-      propertyPath: muzzleFlashPrefab
-      value: 
-      objectReference: {fileID: 7680823622321741579, guid: 0bb1a19f1c2d27546890031d5d798d24, type: 3}
     - target: {fileID: 8597026823265101236, guid: d2249475f47540240a2cb14244d742c8, type: 3}
       propertyPath: m_IsActive
       value: 0
