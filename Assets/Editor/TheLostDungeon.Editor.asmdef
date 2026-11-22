@@ -3,7 +3,8 @@
     "rootNamespace": "TheLostDungeon.EditorTools",
     "references": [
         "TheLostDungeon",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.AI.Navigation"
     ],
     "includePlatforms": [
         "Editor"
