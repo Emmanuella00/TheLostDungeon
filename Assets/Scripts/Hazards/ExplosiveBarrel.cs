@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TheLostDungeon.Algorithms;
 using TheLostDungeon.Combat;
+using TheLostDungeon.Events;
 using TheLostDungeon.Pooling;
 using UnityEngine;
 
@@ -120,6 +121,7 @@ namespace TheLostDungeon.Hazards
             Vector3 centre = transform.position + Vector3.up * 0.5f;
 
             EffectPool.Spawn(explosionEffect, centre, Quaternion.identity);
+            GameEvents.RaiseNoiseMade(centre, blastRadius * 6f);
             if (explosionSound != null) AudioSource.PlayClipAtPoint(explosionSound, centre);
 
             damagedThisBlast.Clear();

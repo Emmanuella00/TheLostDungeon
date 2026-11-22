@@ -39,6 +39,10 @@ namespace TheLostDungeon.Weapons
         [SerializeField, Range(1f, 30f)] private float aimAssistConeDegrees = 8f;
         [SerializeField] private float aimAssistRange = 40f;
 
+        [Header("Noise")]
+        [Tooltip("Enemies within this distance hear the shot (through walls). Melee makes no noise.")]
+        [SerializeField, Min(0f)] private float noiseRadius = 20f;
+
         [Header("Pooling")]
         [SerializeField, Min(0)] private int prewarmBolts = 20;
 
@@ -101,6 +105,7 @@ namespace TheLostDungeon.Weapons
             ReportHeatIfChanged();
             Fired?.Invoke();
             GameEvents.RaiseWeaponFired(Id);
+            GameEvents.RaiseNoiseMade(origin, noiseRadius);
             return true;
         }
 

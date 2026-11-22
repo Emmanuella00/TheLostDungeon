@@ -41,6 +41,7 @@ namespace TheLostDungeon.Events
         public static event Action<string> InteractionPromptChanged;        // prompt text, or null to hide
         public static event Action InventoryChanged;
         public static event Action<string, bool> SwitchActivated;           // (switchId, isOn)
+        public static event Action<Vector3, float> NoiseMade;               // (position, radius) gunshots, explosions
 
         // ----- Systems -----
         public static event Action ProgressSaved;
@@ -65,6 +66,7 @@ namespace TheLostDungeon.Events
         public static void RaiseInteractionPromptChanged(string prompt) => InteractionPromptChanged?.Invoke(prompt);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
         public static void RaiseSwitchActivated(string switchId, bool isOn) => SwitchActivated?.Invoke(switchId, isOn);
+        public static void RaiseNoiseMade(Vector3 position, float radius) => NoiseMade?.Invoke(position, radius);
 
         public static void RaiseProgressSaved() => ProgressSaved?.Invoke();
         public static void RaiseSettingsChanged() => SettingsChanged?.Invoke();
@@ -93,6 +95,7 @@ namespace TheLostDungeon.Events
             InteractionPromptChanged = null;
             InventoryChanged = null;
             SwitchActivated = null;
+            NoiseMade = null;
             ProgressSaved = null;
             SettingsChanged = null;
         }
