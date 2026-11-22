@@ -2,6 +2,7 @@
 using TheLostDungeon.Combat;
 using TheLostDungeon.Core;
 using TheLostDungeon.Events;
+using TheLostDungeon.Items;
 using TheLostDungeon.Levels;
 using TheLostDungeon.Player;
 using UnityEngine;
@@ -28,12 +29,17 @@ namespace TheLostDungeon.Debugging
         private float weaponHeat;
         private bool weaponOverheated;
         private string lastHit = "-";
+        private string prompt;
+        private string objective = "";
 
         private void OnEnable()
         {
             GameEvents.PlayerHealthChanged += HandleHealth;
             GameEvents.WeaponHeatChanged += HandleHeat;
             GameEvents.DamageDealt += HandleDamageDealt;
+            GameEvents.InteractionPromptChanged += HandlePrompt;
+            GameEvents.ObjectiveUpdated += HandleObjective;
+            GameEvents.LevelStarted += HandleLevelStarted;
         }
 
         private void OnDisable()
@@ -41,6 +47,25 @@ namespace TheLostDungeon.Debugging
             GameEvents.PlayerHealthChanged -= HandleHealth;
             GameEvents.WeaponHeatChanged -= HandleHeat;
             GameEvents.DamageDealt -= HandleDamageDealt;
+            GameEvents.InteractionPromptChanged -= HandlePrompt;
+            GameEvents.ObjectiveUpdated -= HandleObjective;
+            GameEvents.LevelStarted -= HandleLevelStarted;
+        }
+
+        private void HandlePrompt(string text) => prompt = text;
+        private void HandleObjective(string description, int current, int target) =>
+            objective = target > 1 ? $"{description}  ({current}/{target})" : description;
+        private void HandleLevelStarted(int levelIndex) => objective = "";
+
+        /// <summary>Temporary stand-in for the HUD: objective at the top, prompt under the crosshair.</summary>
+        private void DrawHudPreview()
+        {
+            var centre = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 16, richText = true };
+            if (!string.IsNullOrEmpty(objective))
+                GUI.Label(new Rect(0, 8, Screen.width, 30), $"<b>OBJECTIVE:</b> {objective}", centre);
+            GUI.Label(new Rect(Screen.width / 2 - 10, Screen.height / 2 - 10, 20, 20), "+", centre);
+            if (!string.IsNullOrEmpty(prompt))
+                GUI.Label(new Rect(0, Screen.height / 2 + 30, Screen.width, 30), $"[E]  {prompt}", centre);
         }
 
         private void HandleHealth(int current, int max) { playerHealth = current; playerMaxHealth = max; }
@@ -77,6 +102,7 @@ namespace TheLostDungeon.Debugging
 
         private void OnGUI()
         {
+            DrawHudPreview();
             if (!visible) return;
             if (!GameManager.HasInstance || !LevelManager.HasInstance || !SaveManager.HasInstance)
             {
@@ -125,10 +151,17 @@ namespace TheLostDungeon.Debugging
             if (IsInLevel(levels))
             {
                 GUILayout.Label("<b>Combat</b>", Rich());
+                Health playerHp = FindPlayerHealth();
                 GUILayout.Label(playerHealth >= 0 ? $"Player health: {playerHealth}/{playerMaxHealth}" : "Player health: (no Player in scene)");
                 GUILayout.Label($"Blaster heat: {weaponHeat * 100f:0}%{(weaponOverheated ? "  OVERHEATED" : "")}");
                 GUILayout.Label($"Last hit: {lastHit}");
-                Health playerHp = FindPlayerHealth();
+                PlayerInventory inv = playerHp != null ? playerHp.GetComponent<PlayerInventory>() : null;
+                if (inv != null)
+                {
+                    string items = "";
+                    foreach (var pair in inv.Items) items += $"{inv.DisplayNameOf(pair.Key)} x{pair.Value}   ";
+                    GUILayout.Label($"Inventory: {(items.Length > 0 ? items : "empty")}");
+                }
                 GUI.enabled = playerHp != null && playerHp.IsAlive && game.IsPlaying;
                 if (GUILayout.Button("Damage player 25"))
                     playerHp.TakeDamage(new DamageInfo(25f, DamageType.Melee, playerHp.transform.position, playerHp.transform.forward));

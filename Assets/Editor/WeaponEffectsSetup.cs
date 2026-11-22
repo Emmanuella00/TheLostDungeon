@@ -129,7 +129,7 @@ namespace TheLostDungeon.EditorTools
             }
         }
 
-        private static ParticleSystem AddParticles(GameObject go, Material material, float lifetime, (float min, float max) speed,
+        internal static ParticleSystem AddParticles(GameObject go, Material material, float lifetime, (float min, float max) speed,
                                                    (float min, float max) size, int burst, Color colourA, Color colourB,
                                                    float coneAngle, bool worldSpace, bool shrink, bool fade)
         {
@@ -177,7 +177,7 @@ namespace TheLostDungeon.EditorTools
         }
 
         /// <summary>Size over lifetime: endScale 0 = shrinks away, 4 = grows to 4x (smoke).</summary>
-        private static void Grow(ParticleSystem ps, float endScale)
+        internal static void Grow(ParticleSystem ps, float endScale)
         {
             ParticleSystem.SizeOverLifetimeModule sol = ps.sizeOverLifetime;
             sol.enabled = true;
@@ -197,7 +197,7 @@ namespace TheLostDungeon.EditorTools
             renderer.lengthScale = 2f;
         }
 
-        private static void FinishPooled(GameObject root, float autoReturnSeconds)
+        internal static void FinishPooled(GameObject root, float autoReturnSeconds)
         {
             root.AddComponent<PooledParticleEffect>();
             PooledObject pooled = root.AddComponent<PooledObject>();

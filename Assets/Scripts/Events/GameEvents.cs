@@ -38,6 +38,9 @@ namespace TheLostDungeon.Events
         public static event Action<EnemyDefeatedInfo> EnemyDefeated;
         public static event Action<ItemCollectedInfo> ItemCollected;
         public static event Action<string, int, int> ObjectiveUpdated;      // (description, current, target)
+        public static event Action<string> InteractionPromptChanged;        // prompt text, or null to hide
+        public static event Action InventoryChanged;
+        public static event Action<string, bool> SwitchActivated;           // (switchId, isOn)
 
         // ----- Systems -----
         public static event Action ProgressSaved;
@@ -59,6 +62,9 @@ namespace TheLostDungeon.Events
         public static void RaiseEnemyDefeated(EnemyDefeatedInfo info) => EnemyDefeated?.Invoke(info);
         public static void RaiseItemCollected(ItemCollectedInfo info) => ItemCollected?.Invoke(info);
         public static void RaiseObjectiveUpdated(string description, int current, int target) => ObjectiveUpdated?.Invoke(description, current, target);
+        public static void RaiseInteractionPromptChanged(string prompt) => InteractionPromptChanged?.Invoke(prompt);
+        public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
+        public static void RaiseSwitchActivated(string switchId, bool isOn) => SwitchActivated?.Invoke(switchId, isOn);
 
         public static void RaiseProgressSaved() => ProgressSaved?.Invoke();
         public static void RaiseSettingsChanged() => SettingsChanged?.Invoke();
@@ -84,6 +90,9 @@ namespace TheLostDungeon.Events
             EnemyDefeated = null;
             ItemCollected = null;
             ObjectiveUpdated = null;
+            InteractionPromptChanged = null;
+            InventoryChanged = null;
+            SwitchActivated = null;
             ProgressSaved = null;
             SettingsChanged = null;
         }

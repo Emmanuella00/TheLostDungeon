@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b9a14e320671214aba73974d25391c5, type: 3}
+  m_Name: LT_Chest
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Items.LootTable
+  entries:
+  - pickupPrefab: {fileID: 2883184028390592625, guid: 45490bfef6b5a5d4098ba4bdaacc6a3b, type: 3}
+    weight: 60
+  - pickupPrefab: {fileID: 8840907892837115285, guid: 86409fbf6872d9e4cb3972f005ebe018, type: 3}
+    weight: 30
