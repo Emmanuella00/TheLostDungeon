@@ -12,6 +12,7 @@
 /[Mm]emoryCaptures/
 /[Rr]ecordings/
 .utmp/
+/Assets/_Recovery/
 
 # Log files
 *.log
