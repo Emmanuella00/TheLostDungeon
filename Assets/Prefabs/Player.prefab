@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 746117044088290457}
   - component: {fileID: 684192323002074365}
   - component: {fileID: 2139850739165159538}
+  - component: {fileID: 7644234720199600827}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -287,6 +288,26 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7644234720199600827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5990212260870857691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &8036119494144792706
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +372,7 @@ MonoBehaviour:
   aimAssistOnDesktop: 0
   aimAssistConeDegrees: 8
   aimAssistRange: 40
+  noiseRadius: 20
   prewarmBolts: 20
 --- !u!114 &796149424652405164
 MonoBehaviour:

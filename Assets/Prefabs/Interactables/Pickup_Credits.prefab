@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2909406485209279137}
   - component: {fileID: 3110604791896036639}
   - component: {fileID: 8328116600530984413}
+  - component: {fileID: 7510043556711643591}
   m_Layer: 0
   m_Name: Pickup_Credits
   m_TagString: Untagged
@@ -75,6 +76,26 @@ MonoBehaviour:
   spinDegreesPerSecond: 90
   bobHeight: 0.08
   bobSpeed: 2
+--- !u!114 &7510043556711643591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2883184028390592625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &7971301100635562455
 GameObject:
   m_ObjectHideFlags: 0
