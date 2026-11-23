@@ -17,6 +17,9 @@ namespace TheLostDungeon.Objectives
         [SerializeField] private Objective[] objectives = new Objective[0];
         [SerializeField] private int completionBonus = 500;
 
+        [Tooltip("Progression reward: ability id unlocked (and saved) when this level is completed, e.g. 'shield'.")]
+        [SerializeField] private string unlockAbilityOnComplete = "";
+
         private int index = -1;
         private int score;
         private bool finished;
@@ -84,11 +87,20 @@ namespace TheLostDungeon.Objectives
             if (o != null) GameEvents.RaiseObjectiveUpdated(o.Description, o.Current, o.Target);
         }
 
+        /// <summary>Saves the unlocked ability; LevelManager's save after completion writes it to JSON.</summary>
+        private void UnlockReward()
+        {
+            if (string.IsNullOrEmpty(unlockAbilityOnComplete) || !SaveManager.HasInstance) return;
+            var unlocked = SaveManager.Instance.Data.unlockedAbilities;
+            if (!unlocked.Contains(unlockAbilityOnComplete)) unlocked.Add(unlockAbilityOnComplete);
+        }
+
         private void Finish()
         {
             if (finished) return;
             finished = true;
             GameEvents.RaiseObjectiveUpdated("All objectives complete", 1, 1);
+            UnlockReward();
 
             if (LevelManager.HasInstance) LevelManager.Instance.CompleteCurrentLevel(score + completionBonus);
             else Debug.Log($"[LevelObjectives] Level complete. Score {score + completionBonus} (no LevelManager in this scene).");
