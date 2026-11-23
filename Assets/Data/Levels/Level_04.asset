@@ -15,5 +15,17 @@ MonoBehaviour:
   displayName: Ducts & Corridors
   sceneName: Level_04
   objectiveSummary: Survive the lockdown until the doors reopen.
+  sceneAsset:
+    m_AssetGUID: 520fc2a2c2c174f48ae0b4a1aad27c4f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  music:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   thumbnail: {fileID: 0}
   parTimeSeconds: 240

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Enemies
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Enemies
+  m_GUID: 4e26de3e62afffc4e948a3e2d1439cf5
+  m_SerializeEntries:
+  - m_GUID: 409b98a4041f3f847922cd410988d1ab
+    m_Address: Enemy_Archer
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42f96997a6675ca4baa942fd0de72a56
+    m_Address: Enemy_Warrior
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 530fca408911f0e47af1e97dfabcc266
+    m_Address: Enemy_Guardian
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 60173eaea8de9ad478b0ab1d65c1c1d6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 055fa466ad0a44447b812143b4b29269, type: 2}
+    - {fileID: 11400000, guid: c50177cd75bbf2f418bbc171d1fbeb26, type: 2}

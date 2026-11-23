@@ -46,10 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a726f52649de5654e90e08685c6a4436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Enemies.EnemySpawner
-  enemyPrefabs:
-  - {fileID: 3347891580538130799, guid: 42f96997a6675ca4baa942fd0de72a56, type: 3}
-  - {fileID: 3347891580538130799, guid: 42f96997a6675ca4baa942fd0de72a56, type: 3}
-  - {fileID: 370420911388891878, guid: 409b98a4041f3f847922cd410988d1ab, type: 3}
+  enemies:
+  - m_AssetGUID: 42f96997a6675ca4baa942fd0de72a56
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 42f96997a6675ca4baa942fd0de72a56
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 409b98a4041f3f847922cd410988d1ab
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   spawnPoints:
   - {fileID: 2610092674489587932}
   - {fileID: 5625796616399364817}

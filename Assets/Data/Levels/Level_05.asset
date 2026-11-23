@@ -15,5 +15,17 @@ MonoBehaviour:
   displayName: Reactor Core
   sceneName: Level_05
   objectiveSummary: Destroy the reactor guardian.
+  sceneAsset:
+    m_AssetGUID: 2f29cf9ddc7cc824f9ad66df62bdb93f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  music:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   thumbnail: {fileID: 0}
   parTimeSeconds: 300

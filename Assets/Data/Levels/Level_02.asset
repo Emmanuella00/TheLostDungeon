@@ -15,5 +15,17 @@ MonoBehaviour:
   displayName: Storage Racks
   sceneName: Level_02
   objectiveSummary: Find the keycard and open the bay door.
+  sceneAsset:
+    m_AssetGUID: bb7693fa4d97286488d3c85880be2f1b
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  music:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   thumbnail: {fileID: 0}
   parTimeSeconds: 200

@@ -15,5 +15,17 @@ MonoBehaviour:
   displayName: Loading Bay
   sceneName: Level_01
   objectiveSummary: Defeat all warrior bots in the loading bay.
+  sceneAsset:
+    m_AssetGUID: 21964668a95bc8d4fba59ecf4c86b019
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  music:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   thumbnail: {fileID: 0}
   parTimeSeconds: 150
