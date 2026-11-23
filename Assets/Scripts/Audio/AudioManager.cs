@@ -3,6 +3,8 @@ using TheLostDungeon.Core;
 using TheLostDungeon.Data;
 using TheLostDungeon.Events;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace TheLostDungeon.Audio
 {
@@ -26,6 +28,7 @@ namespace TheLostDungeon.Audio
         private AudioSource uiSource;
         private Coroutine musicFade;
         private float musicDuck = 1f;
+        private AsyncOperationHandle<AudioClip> levelMusicHandle;   // Addressable level music currently held
 
         public SoundLibrary Library => library;
 
@@ -46,6 +49,7 @@ namespace TheLostDungeon.Audio
             GameEvents.AbilityActivated += HandleAbilityActivated;
             GameEvents.PlayerDied += HandlePlayerDied;
             GameEvents.LevelCompleted += HandleLevelCompleted;
+            GameEvents.LevelStarted += HandleLevelStarted;
             GameEvents.SettingsChanged += ApplyVolumes;
         }
 
@@ -57,6 +61,7 @@ namespace TheLostDungeon.Audio
             GameEvents.AbilityActivated -= HandleAbilityActivated;
             GameEvents.PlayerDied -= HandlePlayerDied;
             GameEvents.LevelCompleted -= HandleLevelCompleted;
+            GameEvents.LevelStarted -= HandleLevelStarted;
             GameEvents.SettingsChanged -= ApplyVolumes;
         }
 
@@ -93,9 +98,11 @@ namespace TheLostDungeon.Audio
             {
                 case GameState.MainMenu:
                     PlayMusic(library.menuMusic);
+                    StartCoroutine(ReleaseLevelMusicAfter(musicFadeSeconds + 0.1f));
                     break;
                 case GameState.Playing:
-                    PlayMusic(library.levelMusic);
+                    // Levels with their own Addressable music load it in HandleLevelStarted.
+                    if (!CurrentLevelHasOwnMusic()) PlayMusic(library.levelMusic);
                     break;
                 case GameState.GameOver:
                     PlaySfx(library.gameOver);
@@ -106,6 +113,49 @@ namespace TheLostDungeon.Audio
             musicDuck = current == GameState.Paused ? pausedMusicFactor : 1f;
             ApplyVolumes();
         }
+
+        /// <summary>
+        /// ADDRESSABLES: loads the level's own music track when the level starts and releases the
+        /// previous one. Failure just falls back to the shared level music.
+        /// </summary>
+        private void HandleLevelStarted(int levelIndex)
+        {
+            if (!CurrentLevelHasOwnMusic()) return;
+            StartCoroutine(LoadLevelMusic(LevelManager.Instance.CurrentLevel.Music));
+        }
+
+        private IEnumerator LoadLevelMusic(AssetReferenceT<AudioClip> reference)
+        {
+            AsyncOperationHandle<AudioClip> handle = Addressables.LoadAssetAsync<AudioClip>(reference.RuntimeKey);
+            yield return handle;
+
+            if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
+            {
+                Debug.LogWarning("[AudioManager] Level music failed to load; using the default track.");
+                if (handle.IsValid()) Addressables.Release(handle);
+                if (library != null) PlayMusic(library.levelMusic);
+                yield break;
+            }
+
+            AsyncOperationHandle<AudioClip> previous = levelMusicHandle;
+            levelMusicHandle = handle;
+            PlayMusic(handle.Result);
+            if (previous.IsValid()) Addressables.Release(previous);
+        }
+
+        /// <summary>Releases the level's music once the menu track has faded in (level content no longer needed).</summary>
+        private IEnumerator ReleaseLevelMusicAfter(float seconds)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+            if (levelMusicHandle.IsValid() && musicSource.clip != levelMusicHandle.Result)
+            {
+                Addressables.Release(levelMusicHandle);
+                levelMusicHandle = default;
+            }
+        }
+
+        private static bool CurrentLevelHasOwnMusic() =>
+            LevelManager.HasInstance && LevelManager.Instance.CurrentLevel != null && LevelManager.Instance.CurrentLevel.HasAddressableMusic;
 
         private void HandleEnemyDefeated(EnemyDefeatedInfo info) => PlaySfx(library != null ? library.enemyDefeated : null);
         private void HandleItemCollected(ItemCollectedInfo info) => PlaySfx(library != null ? library.itemCollected : null);
