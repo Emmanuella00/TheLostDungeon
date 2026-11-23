@@ -48,6 +48,32 @@ namespace TheLostDungeon.Events
         }
     }
 
+    /// <summary>Everything the HUD needs to draw one ability icon.</summary>
+    public readonly struct AbilityStatus
+    {
+        public readonly int Slot;
+        public readonly string AbilityId;
+        public readonly string DisplayName;
+        public readonly Sprite Icon;
+        public readonly bool Unlocked;
+        public readonly bool Active;               // effect currently running (e.g. shield up)
+        public readonly float CooldownSeconds;
+        public readonly float CooldownRemaining;
+
+        public AbilityStatus(int slot, string abilityId, string displayName, Sprite icon, bool unlocked, bool active,
+                             float cooldownSeconds, float cooldownRemaining)
+        {
+            Slot = slot;
+            AbilityId = abilityId;
+            DisplayName = displayName;
+            Icon = icon;
+            Unlocked = unlocked;
+            Active = active;
+            CooldownSeconds = cooldownSeconds;
+            CooldownRemaining = cooldownRemaining;
+        }
+    }
+
     public readonly struct LevelResult
     {
         public readonly int LevelIndex;

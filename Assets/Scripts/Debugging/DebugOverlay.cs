@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using TheLostDungeon.Abilities;
 using TheLostDungeon.Combat;
 using TheLostDungeon.Core;
 using TheLostDungeon.Events;
@@ -167,7 +168,24 @@ namespace TheLostDungeon.Debugging
                     playerHp.TakeDamage(new DamageInfo(25f, DamageType.Melee, playerHp.transform.position, playerHp.transform.forward));
                 if (GUILayout.Button("Heal player 50")) playerHp.Heal(50f);
                 GUI.enabled = true;
-                GUILayout.Label("Hide panel (F1), then: Left click = shoot, Right click / F = melee", Small());
+                PlayerAbilities abilities = playerHp != null ? playerHp.GetComponent<PlayerAbilities>() : null;
+                if (abilities != null)
+                {
+                    for (int i = 0; i < abilities.Abilities.Count; i++)
+                    {
+                        IAbility a = abilities.Abilities[i];
+                        if (a == null) continue;
+                        string state = !abilities.IsUnlocked(i) ? "LOCKED" : a.IsActive ? "ACTIVE" : a.IsReady ? "ready" : $"{a.CooldownRemaining:0.0}s";
+                        GUILayout.Label($"Ability {(i == 0 ? "Q" : "R")}: {a.DisplayName} [{state}]");
+                    }
+                    if (GUILayout.Button("Unlock all abilities (saved)") && SaveManager.HasInstance)
+                    {
+                        foreach (IAbility a in abilities.Abilities)
+                            if (a != null && !SaveManager.Instance.Data.unlockedAbilities.Contains(a.Id)) SaveManager.Instance.Data.unlockedAbilities.Add(a.Id);
+                        SaveManager.Instance.Save();
+                    }
+                }
+                GUILayout.Label("Hide panel (F1), then: Left click = shoot, Right click / F = melee, Q / R = abilities", Small());
                 GUILayout.Space(8);
             }
 
