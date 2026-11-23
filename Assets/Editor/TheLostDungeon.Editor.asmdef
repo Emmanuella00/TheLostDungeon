@@ -4,7 +4,10 @@
     "references": [
         "TheLostDungeon",
         "Unity.InputSystem",
-        "Unity.AI.Navigation"
+        "Unity.AI.Navigation",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Unity.Addressables.Editor"
     ],
     "includePlatforms": [
         "Editor"
