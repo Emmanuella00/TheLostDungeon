@@ -12,7 +12,9 @@ namespace TheLostDungeon.Pooling
         [SerializeField, Min(0f)] private float autoReturnSeconds = 0f;
 
         private IPoolable[] poolables;
-        private float returnAt;
+        // Starts at "never": objects placed in a scene by hand (not spawned from a pool) must not
+        // time out on their first frame. NotifySpawned sets the real time for pooled spawns.
+        private float returnAt = float.PositiveInfinity;
 
         public PrefabPool Owner { get; set; }
 
