@@ -32,6 +32,8 @@ namespace TheLostDungeon.Debugging
         private string lastHit = "-";
         private string prompt;
         private string objective = "";
+        private string loadError;
+        private float loadProgress = -1f;
 
         private void OnEnable()
         {
@@ -41,6 +43,8 @@ namespace TheLostDungeon.Debugging
             GameEvents.InteractionPromptChanged += HandlePrompt;
             GameEvents.ObjectiveUpdated += HandleObjective;
             GameEvents.LevelStarted += HandleLevelStarted;
+            GameEvents.LevelLoadFailed += HandleLoadFailed;
+            GameEvents.LevelLoadProgress += HandleLoadProgress;
         }
 
         private void OnDisable()
@@ -51,12 +55,42 @@ namespace TheLostDungeon.Debugging
             GameEvents.InteractionPromptChanged -= HandlePrompt;
             GameEvents.ObjectiveUpdated -= HandleObjective;
             GameEvents.LevelStarted -= HandleLevelStarted;
+            GameEvents.LevelLoadFailed -= HandleLoadFailed;
+            GameEvents.LevelLoadProgress -= HandleLoadProgress;
         }
+
+        private void HandleLoadFailed(string reason) { loadError = reason; loadProgress = -1f; }
+        private void HandleLoadProgress(float progress) { loadProgress = progress >= 1f ? -1f : progress; if (progress <= 0f) loadError = null; }
 
         private void HandlePrompt(string text) => prompt = text;
         private void HandleObjective(string description, int current, int target) =>
             objective = target > 1 ? $"{description}  ({current}/{target})" : description;
-        private void HandleLevelStarted(int levelIndex) => objective = "";
+        private void HandleLevelStarted(int levelIndex) { objective = ""; loadProgress = -1f; loadError = null; }
+
+        /// <summary>Temporary loading bar and load-failure message (with Retry / Main Menu) until the real UI.</summary>
+        private void DrawLoadingState()
+        {
+            var centre = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleCenter, fontSize = 15, wordWrap = true };
+            if (loadProgress >= 0f)
+            {
+                GUI.Box(new Rect(Screen.width / 2 - 160, Screen.height - 70, 320, 30), $"Loading... {loadProgress * 100f:0}%", centre);
+            }
+            if (!string.IsNullOrEmpty(loadError) && LevelManager.HasInstance)
+            {
+                var area = new Rect(Screen.width / 2 - 220, Screen.height / 2 - 70, 440, 140);
+                GUI.Box(area, "LOAD FAILED\n" + loadError, centre);
+                if (GUI.Button(new Rect(area.x + 60, area.yMax - 40, 140, 30), "Retry"))
+                {
+                    loadError = null;
+                    LevelManager.Instance.TryLoadLevel(LevelManager.Instance.LastRequestedLevelIndex);
+                }
+                if (GUI.Button(new Rect(area.x + 240, area.yMax - 40, 140, 30), "Main Menu"))
+                {
+                    loadError = null;
+                    LevelManager.Instance.LoadMainMenu();
+                }
+            }
+        }
 
         /// <summary>Temporary stand-in for the HUD: objective at the top, prompt under the crosshair.</summary>
         private void DrawHudPreview()
@@ -104,6 +138,7 @@ namespace TheLostDungeon.Debugging
         private void OnGUI()
         {
             DrawHudPreview();
+            DrawLoadingState();
             if (!visible) return;
             if (!GameManager.HasInstance || !LevelManager.HasInstance || !SaveManager.HasInstance)
             {
