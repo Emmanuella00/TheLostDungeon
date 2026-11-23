@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TheLostDungeon.Content;
 using TheLostDungeon.Events;
 using TheLostDungeon.Levels;
 using UnityEngine;
@@ -11,14 +12,16 @@ namespace TheLostDungeon.Core
     /// Owns the list of levels, enforces locking, loads scenes with progress feedback and records
     /// completions. UI screens call TryLoadLevel / LoadMainMenu; they never load scenes directly.
     ///
-    /// Step 5 will add Addressables loading of each level's enemies and effects here, so the rest
-    /// of the game won't need to change when that happens.
+    /// Level scenes are loaded through ISceneContentLoader (Addressables): each level's content is
+    /// loaded when needed and released when the player leaves. The main menu is a normal built-in
+    /// scene so the game always has somewhere safe to return to.
     /// </summary>
     public class LevelManager : Singleton<LevelManager>
     {
         [SerializeField] private LevelDefinition[] levels = new LevelDefinition[0];
         [SerializeField] private string mainMenuSceneName = "MainMenu";
 
+        private readonly ISceneContentLoader contentLoader = new AddressablesSceneLoader();
         private float levelStartTime;
         private Coroutine loadRoutine;
 
@@ -29,6 +32,8 @@ namespace TheLostDungeon.Core
         public bool IsLoading => loadRoutine != null;
         public bool HasNextLevel => CurrentLevelIndex >= 0 && CurrentLevelIndex + 1 < levels.Length;
         public float CurrentLevelElapsed => CurrentLevelIndex >= 0 ? Time.time - levelStartTime : 0f;
+        /// <summary>The level most recently requested (used by the "Retry" button after a failed load).</summary>
+        public int LastRequestedLevelIndex { get; private set; } = -1;
 
         /// <summary>Progression rules over the current save. Cheap to create, always up to date.</summary>
         public LevelProgression Progression => new LevelProgression(SaveManager.Instance.Data, Mathf.Max(1, levels.Length));
@@ -60,7 +65,10 @@ namespace TheLostDungeon.Core
                 return false;
             }
 
-            loadRoutine = StartCoroutine(LoadSceneRoutine(levels[levelIndex].SceneName, levelIndex));
+            LastRequestedLevelIndex = levelIndex;
+            loadRoutine = levels[levelIndex].HasAddressableScene
+                ? StartCoroutine(LoadAddressableLevelRoutine(levelIndex))
+                : StartCoroutine(LoadSceneRoutine(levels[levelIndex].SceneName, levelIndex));   // fallback before setup
             return true;
         }
 
@@ -92,6 +100,26 @@ namespace TheLostDungeon.Core
             SaveManager.Instance.Save();
 
             GameEvents.RaiseLevelCompleted(new LevelResult(CurrentLevelIndex, time, score, stars, unlockedNewLevel));
+        }
+
+        private IEnumerator LoadAddressableLevelRoutine(int levelIndex)
+        {
+            GameManager.Instance.ChangeState(GameState.Loading);
+            GameEvents.RaiseLevelLoadProgress(0f);
+
+            string failure = null;
+            yield return contentLoader.LoadLevel(levels[levelIndex], GameEvents.RaiseLevelLoadProgress, reason => failure = reason);
+            loadRoutine = null;
+
+            if (failure != null)
+            {
+                Debug.LogError($"[LevelManager] {failure}");
+                GameEvents.RaiseLevelLoadFailed(failure);
+                GameManager.Instance.ChangeState(CurrentLevelIndex >= 0 ? GameState.Playing : GameState.MainMenu);
+                yield break;
+            }
+
+            BeginLevel(levelIndex);
         }
 
         private IEnumerator LoadSceneRoutine(string sceneName, int levelIndex)
@@ -127,6 +155,7 @@ namespace TheLostDungeon.Core
             else
             {
                 CurrentLevelIndex = -1;
+                contentLoader.ReleaseCurrentLevel();   // the level's bundles are no longer needed
                 GameManager.Instance.ChangeState(GameState.MainMenu);
             }
         }
