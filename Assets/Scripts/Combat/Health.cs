@@ -65,6 +65,9 @@ namespace TheLostDungeon.Combat
             return result;
         }
 
+        /// <summary>Ignore all damage for a while (e.g. during a dash).</summary>
+        public void SetInvulnerable(float seconds) => invulnerableUntil = Mathf.Max(invulnerableUntil, Time.time + seconds);
+
         public float Heal(float amount) => Model.Heal(amount);
         public void Revive() => Model.Revive();
         public void SetMaxHealth(float newMax, bool fillToMax) => Model.SetMax(newMax, fillToMax);

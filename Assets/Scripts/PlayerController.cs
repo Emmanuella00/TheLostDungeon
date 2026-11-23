@@ -48,6 +48,9 @@ namespace TheLostDungeon.Player
         private bool controlEnabled = true;
 
         public bool ControlEnabled => controlEnabled;
+        /// <summary>Current move stick / WASD input (used by the dash ability for its direction).</summary>
+        public Vector2 MoveInput => controlEnabled && moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+        public CharacterController Motor => characterController;
         public InputActionAsset Controls => controls;
         public Vector3 Velocity => characterController != null ? characterController.velocity : Vector3.zero;
 
