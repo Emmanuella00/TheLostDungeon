@@ -65,6 +65,13 @@ namespace TheLostDungeon.Combat
             return result;
         }
 
+        /// <summary>Instant death that ignores defence and invulnerability (falling off the level).</summary>
+        public void Kill()
+        {
+            if (!IsAlive) return;
+            Model.Damage(Model.Current);
+        }
+
         /// <summary>Ignore all damage for a while (e.g. during a dash).</summary>
         public void SetInvulnerable(float seconds) => invulnerableUntil = Mathf.Max(invulnerableUntil, Time.time + seconds);
 

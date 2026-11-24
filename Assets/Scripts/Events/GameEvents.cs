@@ -29,6 +29,7 @@ namespace TheLostDungeon.Events
         // ----- Player -----
         public static event Action<int, int> PlayerHealthChanged;           // (current, max)
         public static event Action PlayerDied;
+        public static event Action PlayerFell;                              // fell off the level (rooftop)
         public static event Action<string, float> AbilityActivated;         // (abilityId, cooldown)
         public static event Action<AbilityStatus> AbilityStatusChanged;     // unlocked / used / ready again
         public static event Action<string> WeaponFired;                     // weaponId
@@ -56,6 +57,7 @@ namespace TheLostDungeon.Events
 
         public static void RaisePlayerHealthChanged(int current, int max) => PlayerHealthChanged?.Invoke(current, max);
         public static void RaisePlayerDied() => PlayerDied?.Invoke();
+        public static void RaisePlayerFell() => PlayerFell?.Invoke();
         public static void RaiseAbilityActivated(string abilityId, float cooldown) => AbilityActivated?.Invoke(abilityId, cooldown);
         public static void RaiseAbilityStatusChanged(AbilityStatus status) => AbilityStatusChanged?.Invoke(status);
         public static void RaiseWeaponFired(string weaponId) => WeaponFired?.Invoke(weaponId);
@@ -87,6 +89,7 @@ namespace TheLostDungeon.Events
             LevelCompleted = null;
             PlayerHealthChanged = null;
             PlayerDied = null;
+            PlayerFell = null;
             AbilityActivated = null;
             AbilityStatusChanged = null;
             WeaponFired = null;
