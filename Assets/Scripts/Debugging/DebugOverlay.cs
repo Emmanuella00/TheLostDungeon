@@ -19,11 +19,12 @@ namespace TheLostDungeon.Debugging
     /// is paused so you can click the buttons.
     ///
     /// It creates itself automatically, so there is nothing to add to any scene.
-    /// Delete this file once the real UI is finished.
+    /// Now that the real UI exists it starts HIDDEN, and its HUD preview / loading box are
+    /// switched off. It stays as a cheat panel for testing (unlock abilities, jump to levels).
     /// </summary>
     public class DebugOverlay : MonoBehaviour
     {
-        private bool visible = true;
+        private bool visible;   // hidden by default now that the real UI exists
         private Vector2 scroll;
         private int playerHealth = -1;
         private int playerMaxHealth = -1;
@@ -133,12 +134,18 @@ namespace TheLostDungeon.Debugging
             }
         }
 
-        private void Start() => SetPlayerControl(!visible);
+        private void Start()
+        {
+            if (visible) SetPlayerControl(false);   // don't lock the cursor in menus when hidden
+        }
 
         private void OnGUI()
         {
-            DrawHudPreview();
-            DrawLoadingState();
+            if (!TheLostDungeon.UI.UIManager.HasInstance)
+            {
+                DrawHudPreview();
+                DrawLoadingState();
+            }
             if (!visible) return;
             if (!GameManager.HasInstance || !LevelManager.HasInstance || !SaveManager.HasInstance)
             {
