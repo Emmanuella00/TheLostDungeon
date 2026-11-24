@@ -96,3 +96,8 @@ InitTestScene*.unity*
 Thumbs.db
 Desktop.ini
 
+# 7. Secret files
+# ---------------------------------------------------------------------
+Assets/Resources/LeaderboardConfig.asset
+Assets/Resources/LeaderboardConfig.asset.meta
+
