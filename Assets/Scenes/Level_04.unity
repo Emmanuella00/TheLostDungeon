@@ -25449,6 +25449,8 @@ GameObject:
   - component: {fileID: 1153558499}
   - component: {fileID: 1153558498}
   - component: {fileID: 1153558497}
+  - component: {fileID: 1153558501}
+  - component: {fileID: 1153558500}
   m_Layer: 0
   m_Name: Objective_ReachExit
   m_TagString: Untagged
@@ -25505,6 +25507,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1153558500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153558496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0db1acd7a80ea14bb47c3d05ba0d94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Interaction.ExitSign
+  label: EXIT
+  heightAboveDoor: 0.5
+  offset: {x: 0, y: 0, z: 0}
+  faceCamera: 1
+  rotationOffset: {x: 0, y: 0, z: 0}
+  visibleDistance: 30
+  addLight: 1
+--- !u!114 &1153558501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153558496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e7a4de53a7af754db1f60ac6f02efaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Interaction.Door
+  panel: {fileID: 0}
+  openOffset: {x: 0, y: 2.7, z: 0}
+  speed: 3
+  playerCanOpen: 1
+  startsOpen: 0
+  requiredKey: {fileID: 0}
+  consumeKey: 0
+  openSound: {fileID: 0}
 --- !u!1001 &1155341563
 PrefabInstance:
   m_ObjectHideFlags: 0

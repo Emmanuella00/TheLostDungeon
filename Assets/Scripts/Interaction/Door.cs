@@ -30,6 +30,8 @@ namespace TheLostDungeon.Interaction
 
         public bool IsOpen => isOpen;
         public bool IsLocked => requiredKey != null;
+        public ItemDefinition RequiredKey => requiredKey;
+        public bool PlayerCanOpen => playerCanOpen;
 
         private void Awake()
         {

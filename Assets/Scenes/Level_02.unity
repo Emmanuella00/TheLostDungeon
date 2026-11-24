@@ -5578,8 +5578,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6233029272951359056, guid: df5c98e8c039082459778d3a8f4863f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 268516070}
   m_SourcePrefab: {fileID: 100100000, guid: df5c98e8c039082459778d3a8f4863f8, type: 3}
+--- !u!1 &268516069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6233029272951359056, guid: df5c98e8c039082459778d3a8f4863f8, type: 3}
+  m_PrefabInstance: {fileID: 268516068}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &268516070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268516069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0db1acd7a80ea14bb47c3d05ba0d94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Interaction.ExitSign
+  label: EXIT
+  heightAboveDoor: 0.5
+  offset: {x: 0, y: 0, z: -1.8}
+  faceCamera: 1
+  rotationOffset: {x: 0, y: 0, z: 0}
+  visibleDistance: 30
+  addLight: 1
 --- !u!1001 &274528946
 PrefabInstance:
   m_ObjectHideFlags: 0

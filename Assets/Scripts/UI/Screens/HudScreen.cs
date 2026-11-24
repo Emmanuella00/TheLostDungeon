@@ -4,6 +4,7 @@ using TheLostDungeon.Events;
 using TheLostDungeon.Items;
 using TheLostDungeon.Levels;
 using UnityEngine;
+using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
 namespace TheLostDungeon.UI
@@ -70,6 +71,8 @@ namespace TheLostDungeon.UI
         private bool overheated;
         private Image promptPanel;
         private Text promptText;
+        // Mobile
+        private RectTransform touchControls;
 
         protected override void Build()
         {
@@ -81,6 +84,7 @@ namespace TheLostDungeon.UI
             BuildInventory();
             BuildCrosshair();
             BuildPrompt();
+            BuildTouchControls();
 
             objectiveColour = objectivePanel.color;
             healthColour = healthFill.color;
@@ -117,6 +121,24 @@ namespace TheLostDungeon.UI
         {
             RefreshLevelInfo();
             RefreshInventory();
+            touchControls.gameObject.SetActive(UseTouchControls);
+        }
+
+        /// <summary>
+        /// Touch controls on phones and tablets: native Android / iOS builds (CONDITIONAL
+        /// COMPILATION) and WebGL opened in a mobile browser (runtime check). Also true in the
+        /// editor's Device Simulator.
+        /// </summary>
+        public static bool UseTouchControls
+        {
+            get
+            {
+#if UNITY_ANDROID || UNITY_IOS
+                return true;
+#else
+                return Application.isMobilePlatform;
+#endif
+            }
         }
 
         // ================================================================ build
@@ -250,6 +272,82 @@ namespace TheLostDungeon.UI
             promptText = UIBuilder.Label(promptPanel.transform, "Text", "", 26, UITheme.Text, TextAnchor.MiddleCenter, FontStyle.Bold);
             UIBuilder.Stretch(promptText.rectTransform, 6f);
             promptPanel.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// On-screen controls built from the Input System's OnScreenStick / OnScreenButton. Each one
+        /// drives a VIRTUAL GAMEPAD control (left stick = Move, right trigger = Attack...), so the
+        /// player, weapons and abilities need no touch-specific code: they already read the
+        /// gamepad bindings in InputSystem_Actions.
+        /// </summary>
+        private void BuildTouchControls()
+        {
+            touchControls = UIBuilder.Rect("TouchControls", Root);
+            bool isNew = UIBuilder.IsNew(touchControls);
+            // Inactive BEFORE adding on-screen controls: they register their device in OnEnable
+            // and need their control path set first.
+            touchControls.gameObject.SetActive(false);
+            if (isNew)
+            {
+                UIBuilder.Stretch(touchControls);
+                touchControls.SetSiblingIndex(1);   // above the damage vignette, below the HUD panels
+            }
+
+            // Look: drag anywhere on the right half of the screen.
+            Image lookArea = UIBuilder.Image(touchControls, "LookArea", new Color(1f, 1f, 1f, 0f));
+            if (UIBuilder.IsNew(lookArea))
+            {
+                lookArea.rectTransform.anchorMin = new Vector2(0.45f, 0f);
+                lookArea.rectTransform.anchorMax = new Vector2(1f, 0.85f);
+                lookArea.rectTransform.offsetMin = Vector2.zero;
+                lookArea.rectTransform.offsetMax = Vector2.zero;
+            }
+            lookArea.raycastTarget = true;
+            UIBuilder.GetOrAdd<OnScreenLookPad>(lookArea.gameObject);
+
+            // Move: virtual joystick, bottom left.
+            Image stickBase = UIBuilder.Image(touchControls, "MoveStick", new Color(1f, 1f, 1f, 0.12f), IconFactory.Circle);
+            UIBuilder.Place(stickBase.rectTransform, new Vector2(0f, 0f), new Vector2(110f, 140f), new Vector2(260f, 260f));
+            Image knob = UIBuilder.Image(stickBase.transform, "Knob", new Color(1f, 1f, 1f, 0.45f), IconFactory.Circle);
+            UIBuilder.Place(knob.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(110f, 110f));
+            knob.raycastTarget = true;
+            OnScreenStick stick = UIBuilder.GetOrAdd<OnScreenStick>(knob.gameObject);
+            stick.controlPath = "<Gamepad>/leftStick";
+            if (UIBuilder.IsNew(knob)) stick.movementRange = 90f;
+
+            // Action buttons, bottom right.
+            TouchButton("Fire", "FIRE", null, "<Gamepad>/rightTrigger", new Vector2(-150f, 200f), 170f);
+            TouchButton("Bash", "BASH", null, "<Gamepad>/rightShoulder", new Vector2(-360f, 150f), 110f);
+            TouchButton("Jump", "JUMP", null, "<Gamepad>/buttonSouth", new Vector2(-170f, 420f), 110f);
+            TouchButton("Use", "USE", null, "<Gamepad>/buttonNorth", new Vector2(-370f, 330f), 110f);
+            TouchButton("Ability1", "", IconFactory.Dash, "<Gamepad>/leftShoulder", new Vector2(-560f, 150f), 100f);
+            TouchButton("Ability2", "", IconFactory.Shield, "<Gamepad>/leftTrigger", new Vector2(-560f, 290f), 100f);
+
+            // Pause, top centre.
+            Image pause = TouchButton("Pause", "II", null, "<Gamepad>/start", Vector2.zero, 80f);
+            UIBuilder.Place(pause.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(80f, 80f));
+        }
+
+        private Image TouchButton(string name, string label, Sprite icon, string controlPath, Vector2 position, float size)
+        {
+            Image button = UIBuilder.Image(touchControls, "Touch_" + name, new Color(1f, 1f, 1f, 0.16f), IconFactory.Circle);
+            UIBuilder.Place(button.rectTransform, new Vector2(1f, 0f), position, new Vector2(size, size));
+            button.raycastTarget = true;
+
+            if (icon != null)
+            {
+                Image image = UIBuilder.Icon(button.transform, "Icon", icon, new Color(1f, 1f, 1f, 0.85f), size * 0.5f);
+                UIBuilder.Place(image.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(size * 0.5f, size * 0.5f));
+            }
+            else
+            {
+                Text text = UIBuilder.Label(button.transform, "Label", label, Mathf.RoundToInt(size * 0.2f), new Color(1f, 1f, 1f, 0.9f), TextAnchor.MiddleCenter, FontStyle.Bold);
+                UIBuilder.Stretch(text.rectTransform);
+            }
+
+            OnScreenButton onScreen = UIBuilder.GetOrAdd<OnScreenButton>(button.gameObject);
+            onScreen.controlPath = controlPath;
+            return button;
         }
 
         // ================================================================ events

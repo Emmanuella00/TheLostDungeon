@@ -28,6 +28,10 @@ namespace TheLostDungeon.Interaction
 
         public int OnCount => onSwitches.Count;
         public int RequiredCount => requiredSwitchIds.Length;
+        public bool IsOpen => isOpen;
+
+        /// <summary>True if this gate opens the given object (used by ExitSign).</summary>
+        public bool Controls(Object target) => target != null && System.Array.IndexOf(targets, target) >= 0;
 
         private void OnEnable() => GameEvents.SwitchActivated += HandleSwitch;
         private void OnDisable() => GameEvents.SwitchActivated -= HandleSwitch;
