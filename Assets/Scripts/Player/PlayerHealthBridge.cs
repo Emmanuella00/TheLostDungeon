@@ -13,19 +13,32 @@ namespace TheLostDungeon.Player
     public class PlayerHealthBridge : MonoBehaviour
     {
         private Health health;
+        private PlayerController controller;
 
-        private void Awake() => health = GetComponent<Health>();
+        private void Awake()
+        {
+            health = GetComponent<Health>();
+            controller = GetComponent<PlayerController>();
+        }
 
         private void OnEnable()
         {
             health.Changed += HandleChanged;
             health.Died += HandleDied;
+            health.Damaged += HandleDamaged;
         }
 
         private void OnDisable()
         {
             health.Changed -= HandleChanged;
             health.Died -= HandleDied;
+            health.Damaged -= HandleDamaged;
+        }
+
+        /// <summary>Hits with knockback (shield bash, explosions) push the player.</summary>
+        private void HandleDamaged(DamageInfo info, DamageResult result)
+        {
+            if (controller != null && info.Knockback > 0f) controller.AddKnockback(info.Direction * info.Knockback);
         }
 
         private void Start() => HandleChanged(health.Current, health.Max);   // initial HUD value

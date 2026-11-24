@@ -25,6 +25,8 @@ namespace TheLostDungeon.Player
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 3.5f;
         [SerializeField] private float gravity = -9.81f;
+        [Tooltip("How fast a knockback push slows down (m/s lost per second).")]
+        [SerializeField] private float knockbackDamping = 10f;
 
         [Header("Look")]
         [SerializeField] private Transform cameraPivot;
@@ -147,10 +149,26 @@ namespace TheLostDungeon.Player
             cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
         }
 
+        private Vector3 knockbackVelocity;
+
+        /// <summary>
+        /// Pushes the player (e.g. a Guardian's shield bash or an explosion). On the rooftop this
+        /// is what can knock you over the edge.
+        /// </summary>
+        public void AddKnockback(Vector3 impulse)
+        {
+            impulse.y = 0f;
+            knockbackVelocity += impulse;
+            if (characterController.isGrounded && impulse.sqrMagnitude > 1f) verticalVelocity = 2.5f;   // small hop
+        }
+
         private void Move()
         {
             Vector2 input = controlEnabled ? moveAction.ReadValue<Vector2>() : Vector2.zero;
             Vector3 horizontal = (transform.right * input.x + transform.forward * input.y) * moveSpeed;
+
+            horizontal += knockbackVelocity;
+            knockbackVelocity = Vector3.MoveTowards(knockbackVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
 
             if (characterController.isGrounded && verticalVelocity < 0f)
             {
