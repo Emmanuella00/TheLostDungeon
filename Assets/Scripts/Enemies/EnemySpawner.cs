@@ -46,6 +46,7 @@ namespace TheLostDungeon.Enemies
         private int spawned;
 
         public int Spawned => spawned;
+        public int TotalToSpawn => totalToSpawn;
         public bool IsRunning => routine != null;
         public bool Finished => spawned >= totalToSpawn && CountAlive() == 0;
         public bool IsLoaded => loaded;
