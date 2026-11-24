@@ -139,6 +139,9 @@ namespace TheLostDungeon.UI
 
         public void OpenLeaderboard() => ShowOnly(Leaderboard);
 
+        /// <summary>Set by the Game Complete screen: show the leaderboard when the menu appears.</summary>
+        public bool OpenLeaderboardAfterMenu { get; set; }
+
         /// <summary>Opens Settings; Back returns to the screen it was opened from.</summary>
         public void OpenSettings(UIScreen returnTo)
         {
@@ -162,7 +165,15 @@ namespace TheLostDungeon.UI
             {
                 case GameState.Boot:
                 case GameState.MainMenu:
-                    ShowOnly(MainMenu);
+                    if (OpenLeaderboardAfterMenu)
+                    {
+                        OpenLeaderboardAfterMenu = false;
+                        ShowOnly(Leaderboard);
+                    }
+                    else
+                    {
+                        ShowOnly(MainMenu);
+                    }
                     break;
                 case GameState.Loading:
                     ShowOnly(Loading);

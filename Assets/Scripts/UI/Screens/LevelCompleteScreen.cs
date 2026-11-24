@@ -17,7 +17,7 @@ namespace TheLostDungeon.UI
         private Text title, levelName, timeText, scoreText, killsText;
         private Image[] stars;
         private RectTransform unlockBadge;
-        private Button nextButton, replayButton;
+        private Button nextButton, replayButton, leaderboardButton;
         private Text uploadText;
         private LevelResult result;
         private float starTimer;
@@ -57,7 +57,16 @@ namespace TheLostDungeon.UI
             UIBuilder.Size(UIBuilder.Rect("Spacer", panel.transform), 10f, 10f);
             nextButton = UIBuilder.Button(panel.transform, "Next Level", () => LevelManager.Instance.LoadNextLevel());
             replayButton = UIBuilder.Button(panel.transform, "Replay", () => LevelManager.Instance.ReloadCurrentLevel());
+            leaderboardButton = UIBuilder.Button(panel.transform, "Leaderboard", OpenLeaderboard);
+            if (UIBuilder.IsNew(leaderboardButton)) leaderboardButton.transform.SetSiblingIndex(replayButton.transform.GetSiblingIndex() + 1);
             UIBuilder.Button(panel.transform, "Main Menu", () => UI.GoToMainMenu(), isBack: true);
+        }
+
+        private void OpenLeaderboard()
+        {
+            // Leave the level first, then show the board once the menu has loaded.
+            UI.OpenLeaderboardAfterMenu = true;
+            UI.GoToMainMenu();
         }
 
         public override void Subscribe() => GameEvents.LevelCompleted += HandleCompleted;
@@ -71,8 +80,12 @@ namespace TheLostDungeon.UI
             LevelDefinition level = levels != null ? levels.CurrentLevel : null;
             bool finalLevel = levels != null && !levels.HasNextLevel;
 
-            title.text = finalLevel ? "DUNGEON ESCAPED!" : "LEVEL COMPLETE";
-            levelName.text = level != null ? $"Level {result.LevelIndex + 1}  ·  {level.DisplayName}" : "";
+            // Final level = GAME COMPLETE screen: no Next button, a leaderboard button instead.
+            title.text = finalLevel ? "GAME COMPLETE" : "LEVEL COMPLETE";
+            levelName.text = finalLevel
+                ? "You escaped the Lost Dungeon!"
+                : level != null ? $"Level {result.LevelIndex + 1}  ·  {level.DisplayName}" : "";
+            leaderboardButton.gameObject.SetActive(finalLevel);
             string par = level != null && level.ParTimeSeconds > 0f ? $"   (par {UIBuilder.FormatTime(level.ParTimeSeconds)})" : "";
             timeText.text = UIBuilder.FormatTime(result.TimeSeconds) + par;
             scoreText.text = result.Score.ToString();

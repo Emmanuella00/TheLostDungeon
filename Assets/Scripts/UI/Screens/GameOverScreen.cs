@@ -1,4 +1,5 @@
 using TheLostDungeon.Core;
+using TheLostDungeon.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,9 @@ namespace TheLostDungeon.UI
     public class GameOverScreen : UIScreen
     {
         private Button retryButton;
+        private Text title;
         private Text details;
+        private bool fell;
         private Image backdrop;
         private float time;
         private Color backdropColour;
@@ -24,7 +27,7 @@ namespace TheLostDungeon.UI
             UIBuilder.Place(panel.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(640f, 520f));
             UIBuilder.Vertical(panel, 16f, TextAnchor.UpperCenter, 40);
 
-            UIBuilder.Size(UIBuilder.Label(panel.transform, "Title", "YOU DIED", 72, UITheme.Danger, TextAnchor.MiddleCenter, FontStyle.Bold), 560f, 90f);
+            title = UIBuilder.Size(UIBuilder.Label(panel.transform, "Title", "YOU DIED", 72, UITheme.Danger, TextAnchor.MiddleCenter, FontStyle.Bold), 560f, 90f);
             details = UIBuilder.Size(UIBuilder.Label(panel.transform, "Details", "", 26, UITheme.TextMuted, TextAnchor.MiddleCenter), 560f, 80f);
             UIBuilder.Size(UIBuilder.Rect("Spacer", panel.transform), 10f, 20f);
 
@@ -32,12 +35,30 @@ namespace TheLostDungeon.UI
             UIBuilder.Button(panel.transform, "Main Menu", () => UI.GoToMainMenu(), isBack: true);
         }
 
+        // Why the player lost: GameEvents.PlayerFell is raised by the rooftop FallZone.
+        public override void Subscribe()
+        {
+            GameEvents.PlayerFell += HandleFell;
+            GameEvents.LevelStarted += HandleLevelStarted;
+        }
+
+        public override void Unsubscribe()
+        {
+            GameEvents.PlayerFell -= HandleFell;
+            GameEvents.LevelStarted -= HandleLevelStarted;
+        }
+
+        private void HandleFell() => fell = true;
+        private void HandleLevelStarted(int levelIndex) => fell = false;
+
         protected override void OnShow()
         {
             time = 0f;
+            title.text = fell ? "YOU FELL" : "YOU DIED";
             if (!LevelManager.HasInstance || LevelManager.Instance.CurrentLevel == null) return;
             LevelManager levels = LevelManager.Instance;
-            details.text = $"{levels.CurrentLevel.DisplayName}\nSurvived {UIBuilder.FormatTime(levels.CurrentLevelElapsed)}  ·  {UI.LevelKills} enemies defeated";
+            string cause = fell ? "You fell off the roof.\n" : "";
+            details.text = $"{cause}{levels.CurrentLevel.DisplayName}  ·  {UIBuilder.FormatTime(levels.CurrentLevelElapsed)}  ·  {UI.LevelKills} enemies defeated";
         }
 
         protected override void OnTick(float dt)
