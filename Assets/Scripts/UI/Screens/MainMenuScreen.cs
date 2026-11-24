@@ -32,8 +32,12 @@ namespace TheLostDungeon.UI
             startButton = UIBuilder.Button(column, "Start New Game", StartNewGame);
             continueButton = UIBuilder.Button(column, "Continue", () => GameManager.Instance.ContinueGame());
             UIBuilder.Button(column, "Level Select", () => UI.OpenLevelSelect());
-            UIBuilder.Button(column, "Settings", () => UI.OpenSettings(this));
+            Button settings = UIBuilder.Button(column, "Settings", () => UI.OpenSettings(this));
+            Button leaderboard = UIBuilder.Button(column, "Leaderboard", () => UI.OpenLeaderboard());
             exitButton = UIBuilder.Button(column, "Exit", () => GameManager.Instance.QuitGame(), isBack: true);
+
+            // Added after the prefab was first baked? Keep it in menu order (before Exit).
+            if (UIBuilder.IsNew(leaderboard)) leaderboard.transform.SetSiblingIndex(settings.transform.GetSiblingIndex() + 1);
 
             Text platform = UIBuilder.Label(Root, "Platform", PlatformLabel(), 20, UITheme.TextMuted, TextAnchor.LowerRight);
             UIBuilder.Place(platform.rectTransform, new Vector2(1f, 0f), new Vector2(-30f, 24f), new Vector2(600f, 40f));

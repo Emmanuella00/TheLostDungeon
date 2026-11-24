@@ -36,6 +36,7 @@ namespace TheLostDungeon.UI
         public MainMenuScreen MainMenu { get; private set; }
         public LevelSelectScreen LevelSelect { get; private set; }
         public SettingsScreen Settings { get; private set; }
+        public LeaderboardScreen Leaderboard { get; private set; }
         public LoadingScreen Loading { get; private set; }
         public HudScreen Hud { get; private set; }
         public PauseScreen Pause { get; private set; }
@@ -65,6 +66,7 @@ namespace TheLostDungeon.UI
             MainMenu = Find<MainMenuScreen>();
             LevelSelect = Find<LevelSelectScreen>();
             Settings = Find<SettingsScreen>();
+            Leaderboard = Find<LeaderboardScreen>();
             Hud = Find<HudScreen>();
             Pause = Find<PauseScreen>();
             LevelComplete = Find<LevelCompleteScreen>();
@@ -134,6 +136,8 @@ namespace TheLostDungeon.UI
         }
 
         public void OpenLevelSelect() => ShowOnly(LevelSelect);
+
+        public void OpenLeaderboard() => ShowOnly(Leaderboard);
 
         /// <summary>Opens Settings; Back returns to the screen it was opened from.</summary>
         public void OpenSettings(UIScreen returnTo)
@@ -226,6 +230,7 @@ namespace TheLostDungeon.UI
                 new MainMenuScreen(),
                 new LevelSelectScreen(),
                 new SettingsScreen(),
+                new LeaderboardScreen(),
                 new HudScreen(),
                 new PauseScreen(),
                 new LevelCompleteScreen(),

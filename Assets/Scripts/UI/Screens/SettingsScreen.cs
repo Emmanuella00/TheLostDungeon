@@ -45,6 +45,10 @@ namespace TheLostDungeon.UI
             // Fullscreen only makes sense on desktop builds (CONDITIONAL COMPILATION).
             RectTransform fullscreenRow = Row(panel.transform, "Fullscreen");
             fullscreenButton = UIBuilder.Button(fullscreenRow, "On", ToggleFullscreen, 228f, 48f);
+#else
+            // The prefab was baked in the editor (a desktop platform): hide the row on web/mobile.
+            Transform bakedRow = panel.transform.Find("Row_Fullscreen");
+            if (bakedRow != null) bakedRow.gameObject.SetActive(false);
 #endif
 
             UIBuilder.Size(UIBuilder.Rect("Spacer", panel.transform), 10f, 20f);

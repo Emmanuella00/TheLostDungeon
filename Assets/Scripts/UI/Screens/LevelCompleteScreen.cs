@@ -1,6 +1,7 @@
 using TheLostDungeon.Core;
 using TheLostDungeon.Events;
 using TheLostDungeon.Levels;
+using TheLostDungeon.Online;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ namespace TheLostDungeon.UI
         private Image[] stars;
         private RectTransform unlockBadge;
         private Button nextButton, replayButton;
+        private Text uploadText;
         private LevelResult result;
         private float starTimer;
 
@@ -48,6 +50,9 @@ namespace TheLostDungeon.UI
             UIBuilder.Horizontal(unlockBadge, 12f, TextAnchor.MiddleCenter);
             UIBuilder.Size(UIBuilder.Icon(unlockBadge, "Icon", IconFactory.Unlock, UITheme.Gold, 40f), 40f, 40f);
             UIBuilder.Size(UIBuilder.Label(unlockBadge, "Text", "Next level unlocked", 26, UITheme.Gold, TextAnchor.MiddleLeft, FontStyle.Bold), 300f, 44f);
+
+            uploadText = UIBuilder.Size(UIBuilder.Label(panel.transform, "Upload", "", 22, UITheme.TextMuted, TextAnchor.MiddleCenter), 680f, 30f);
+            if (UIBuilder.IsNew(uploadText)) uploadText.transform.SetSiblingIndex(unlockBadge.GetSiblingIndex() + 1);
 
             UIBuilder.Size(UIBuilder.Rect("Spacer", panel.transform), 10f, 10f);
             nextButton = UIBuilder.Button(panel.transform, "Next Level", () => LevelManager.Instance.LoadNextLevel());
@@ -83,12 +88,28 @@ namespace TheLostDungeon.UI
                 star.rectTransform.localScale = Vector3.one;
             }
             starTimer = 0f;
+            UpdateUploadText();
+        }
+
+        /// <summary>Leaderboard feedback: the score is sent to the REST API when the level completes.</summary>
+        private void UpdateUploadText()
+        {
+            if (!LeaderboardManager.HasInstance) { uploadText.text = ""; return; }
+            switch (LeaderboardManager.Instance.LastSubmit)
+            {
+                case LeaderboardManager.SubmitState.Sending: uploadText.text = "Uploading campaign score..."; break;
+                case LeaderboardManager.SubmitState.Sent: uploadText.text = "Campaign score uploaded to the leaderboard"; break;
+                case LeaderboardManager.SubmitState.Queued: uploadText.text = "Offline: score saved, it will upload later"; break;
+                case LeaderboardManager.SubmitState.LocalOnly: uploadText.text = "Score saved to the local leaderboard"; break;
+                default: uploadText.text = ""; break;
+            }
         }
 
         protected override void OnTick(float dt)
         {
             // Stars pop in one after another (unscaled time: the game is frozen on this screen).
             starTimer += dt;
+            UpdateUploadText();   // the upload finishes while this screen is open
             for (int i = 0; i < stars.Length; i++)
             {
                 if (i >= result.Stars) continue;

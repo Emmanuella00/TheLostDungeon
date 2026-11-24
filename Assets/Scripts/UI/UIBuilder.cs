@@ -309,6 +309,36 @@ namespace TheLostDungeon.UI
             return slider;
         }
 
+        /// <summary>A single-line text field (player name). onSubmit runs when editing ends.</summary>
+        public static InputField InputField(Transform parent, string name, string value, int characterLimit,
+                                            UnityAction<string> onSubmit, float width = 360f)
+        {
+            Image background = Panel(parent, name, new Color(0.12f, 0.16f, 0.22f, 1f));
+            bool isNew = IsNew(background);
+            var field = GetOrAdd<InputField>(background.gameObject);
+
+            if (isNew)
+            {
+                background.raycastTarget = true;
+                Size(background, width, 52f);
+
+                Text placeholder = Label(background.transform, "Placeholder", "Enter a name...", 24, UITheme.TextMuted, TextAnchor.MiddleLeft, FontStyle.Italic);
+                Stretch(placeholder.rectTransform, 12f);
+                Text text = Label(background.transform, "Text", "", 24, UITheme.Text, TextAnchor.MiddleLeft);
+                Stretch(text.rectTransform, 12f);
+                text.supportRichText = false;
+
+                field.targetGraphic = background;
+                field.textComponent = text;
+                field.placeholder = placeholder;
+            }
+
+            field.characterLimit = characterLimit;
+            field.SetTextWithoutNotify(value);
+            if (onSubmit != null) field.onEndEdit.AddListener(onSubmit);
+            return field;
+        }
+
         /// <summary>Fills the parent with a translucent colour that also blocks clicks to the game.</summary>
         public static Image Backdrop(Transform parent, Color colour)
         {
