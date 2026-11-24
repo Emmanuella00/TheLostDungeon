@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72dedd23a5c626440b86f10f8b32a2f4, type: 3}
+  m_Name: UIIconSet
+  m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.UI.UIIconSet
+  icons:
+  - key: white
+    sprite: {fileID: 21300000, guid: db293b65b2f3ae54f9e408a311fe4c1d, type: 3}
+  - key: panel
+    sprite: {fileID: 21300000, guid: dd152db56e26a694886ca7e21529e38f, type: 3}
+  - key: circle
+    sprite: {fileID: 21300000, guid: b7a674530e3f03a4899e67c756cc2981, type: 3}
+  - key: ring
+    sprite: {fileID: 21300000, guid: 2ce7b63b2a1814345a655502e75370a5, type: 3}
+  - key: arc
+    sprite: {fileID: 21300000, guid: 759de170505e08746b6fe9b2711d3c08, type: 3}
+  - key: lock
+    sprite: {fileID: 21300000, guid: 1fea05a6d65d8c04a8df66e37261be92, type: 3}
+  - key: unlock
+    sprite: {fileID: 21300000, guid: 9feba9581e573914aaefb9f383096646, type: 3}
+  - key: star
+    sprite: {fileID: 21300000, guid: 738d9d664b7e84a4b97469916b9d2852, type: 3}
+  - key: starOutline
+    sprite: {fileID: 21300000, guid: 59be45fab85086f428e7cb50b8759692, type: 3}
+  - key: check
+    sprite: {fileID: 21300000, guid: 63314b854d0ef4f49a74ea66bebaf94f, type: 3}
+  - key: play
+    sprite: {fileID: 21300000, guid: 81be525cc88557b4d834c8cbd284246b, type: 3}
+  - key: heart
+    sprite: {fileID: 21300000, guid: d3fbcdda51dcbdb49a80742d5d56429d, type: 3}
+  - key: shield
+    sprite: {fileID: 21300000, guid: 213e024f0b696e14e85eb0a69884812f, type: 3}
+  - key: dash
+    sprite: {fileID: 21300000, guid: a87378140a9d58c4bbba23c02b893dc6, type: 3}
+  - key: key
+    sprite: {fileID: 21300000, guid: 54940d7ab2874214997ec2976501305d, type: 3}
+  - key: vignette
+    sprite: {fileID: 21300000, guid: a2c38a09b217b154f9e43581a16a878e, type: 3}
