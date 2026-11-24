@@ -25268,7 +25268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Objectives.LevelObjectives
   objectives:
-  - {fileID: 0}
+  - {fileID: 2016726759}
   - {fileID: 1068697410}
   - {fileID: 569562419}
   completionBonus: 500
@@ -48330,7 +48330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d13c09ee7fa4c240926902f050a85c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Objectives.ReachZoneObjective
-  description: 'Ready for the reactor hall ? '
+  description: 'Enter the reactor hall '
 --- !u!1001 &2021386035
 PrefabInstance:
   m_ObjectHideFlags: 0
