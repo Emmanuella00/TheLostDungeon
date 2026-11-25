@@ -13,6 +13,12 @@ namespace TheLostDungeon.Audio
         public AudioClip menuMusic;
         public AudioClip levelMusic;
 
+        [Header("Player")]
+        public AudioClip playerShoot;
+        public AudioClip playerMelee;
+        public AudioClip playerOverheat;
+        public AudioClip playerHurt;
+
         [Header("Gameplay")]
         public AudioClip enemyDefeated;
         public AudioClip itemCollected;
@@ -22,6 +28,8 @@ namespace TheLostDungeon.Audio
         [Header("Stingers")]
         public AudioClip levelComplete;
         public AudioClip gameOver;
+        [Tooltip("Played instead of Level Complete when the LAST level is finished.")]
+        public AudioClip gameComplete;
 
         [Header("UI")]
         public AudioClip uiClick;

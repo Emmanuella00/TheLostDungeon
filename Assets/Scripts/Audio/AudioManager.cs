@@ -51,6 +51,9 @@ namespace TheLostDungeon.Audio
             GameEvents.LevelCompleted += HandleLevelCompleted;
             GameEvents.LevelStarted += HandleLevelStarted;
             GameEvents.SettingsChanged += ApplyVolumes;
+            GameEvents.WeaponFired += HandleWeaponFired;
+            GameEvents.WeaponHeatChanged += HandleHeatChanged;
+            GameEvents.PlayerHealthChanged += HandlePlayerHealthChanged;
         }
 
         private void OnDisable()
@@ -63,6 +66,9 @@ namespace TheLostDungeon.Audio
             GameEvents.LevelCompleted -= HandleLevelCompleted;
             GameEvents.LevelStarted -= HandleLevelStarted;
             GameEvents.SettingsChanged -= ApplyVolumes;
+            GameEvents.WeaponFired -= HandleWeaponFired;
+            GameEvents.WeaponHeatChanged -= HandleHeatChanged;
+            GameEvents.PlayerHealthChanged -= HandlePlayerHealthChanged;
         }
 
         // ---------- Public API ----------
@@ -161,7 +167,38 @@ namespace TheLostDungeon.Audio
         private void HandleItemCollected(ItemCollectedInfo info) => PlaySfx(library != null ? library.itemCollected : null);
         private void HandleAbilityActivated(string abilityId, float cooldown) => PlaySfx(library != null ? library.abilityActivated : null);
         private void HandlePlayerDied() => PlaySfx(library != null ? library.playerDied : null);
-        private void HandleLevelCompleted(LevelResult result) => PlaySfx(library != null ? library.levelComplete : null);
+        /// <summary>The last level plays the Game Complete fanfare instead of the normal stinger.</summary>
+        private void HandleLevelCompleted(LevelResult result)
+        {
+            if (library == null) return;
+            bool finalLevel = LevelManager.HasInstance && !LevelManager.Instance.HasNextLevel;
+            PlaySfx(finalLevel && library.gameComplete != null ? library.gameComplete : library.levelComplete);
+        }
+
+        // Player sounds come from events the weapons and health already raise (Observer):
+        // the weapon and player scripts don't need to know audio exists.
+        private bool wasOverheated;
+        private int lastPlayerHealth = -1;
+
+        private void HandleWeaponFired(string weaponId)
+        {
+            if (library == null) return;
+            if (weaponId == "melee") PlaySfx(library.playerMelee);
+            else PlaySfx(library.playerShoot, 0.6f);   // quieter: it plays many times a second
+        }
+
+        private void HandleHeatChanged(float heat, bool overheated)
+        {
+            if (overheated && !wasOverheated && library != null) PlaySfx(library.playerOverheat);
+            wasOverheated = overheated;
+        }
+
+        private void HandlePlayerHealthChanged(int current, int max)
+        {
+            if (library != null && lastPlayerHealth > 0 && current < lastPlayerHealth && current > 0)
+                PlaySfx(library.playerHurt, 0.8f);
+            lastPlayerHealth = current;
+        }
 
         // ---------- Internals ----------
 
