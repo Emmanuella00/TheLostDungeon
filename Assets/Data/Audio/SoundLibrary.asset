@@ -12,14 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3648712a59cce4691946a15f5e0269, type: 3}
   m_Name: SoundLibrary
   m_EditorClassIdentifier: TheLostDungeon::TheLostDungeon.Audio.SoundLibrary
-  menuMusic: {fileID: 0}
-  levelMusic: {fileID: 0}
-  enemyDefeated: {fileID: 0}
-  itemCollected: {fileID: 0}
-  abilityActivated: {fileID: 0}
-  playerDied: {fileID: 0}
-  levelComplete: {fileID: 0}
-  gameOver: {fileID: 0}
-  uiClick: {fileID: 0}
-  uiBack: {fileID: 0}
-  uiLocked: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: 8d2dca02eb3b0014082ae9e2049f5a78, type: 3}
+  levelMusic: {fileID: 8300000, guid: 8d2dca02eb3b0014082ae9e2049f5a78, type: 3}
+  playerShoot: {fileID: 8300000, guid: ebdc6215658ba094d9d4557f84146de5, type: 3}
+  playerMelee: {fileID: 8300000, guid: 263f8aaa01d5d0041b082b7b69d9ca02, type: 3}
+  playerOverheat: {fileID: 8300000, guid: bea37e2f1d9209440aac9a3d03a16787, type: 3}
+  playerHurt: {fileID: 8300000, guid: eecbbe738858027488ed9a7a0c2a5df1, type: 3}
+  enemyDefeated: {fileID: 8300000, guid: f776a5a7b10a2f24f96163db0a0e1a1c, type: 3}
+  itemCollected: {fileID: 8300000, guid: 8aa89944864f7ff47b208e5e4b8174da, type: 3}
+  abilityActivated: {fileID: 8300000, guid: 0f24aaa3c38a5cb43ae748ff8ea2592a, type: 3}
+  playerDied: {fileID: 8300000, guid: f776a5a7b10a2f24f96163db0a0e1a1c, type: 3}
+  levelComplete: {fileID: 8300000, guid: 828cdf6e31872e04384510fd255cf05f, type: 3}
+  gameOver: {fileID: 8300000, guid: f776a5a7b10a2f24f96163db0a0e1a1c, type: 3}
+  gameComplete: {fileID: 8300000, guid: 2de937b859f59354db74282032b23fa9, type: 3}
+  uiClick: {fileID: 8300000, guid: 0f24aaa3c38a5cb43ae748ff8ea2592a, type: 3}
+  uiBack: {fileID: 8300000, guid: 0f24aaa3c38a5cb43ae748ff8ea2592a, type: 3}
+  uiLocked: {fileID: 8300000, guid: 8aa89944864f7ff47b208e5e4b8174da, type: 3}
